@@ -1,7 +1,5 @@
 const express = require('express');
 const morgan = require('morgan');
-const fs = require('fs');
-const path = require('path');
 
 const app = express();
 app.use(express.json());
@@ -9,25 +7,24 @@ app.use(express.text());
 app.use(express.raw());
 const port = process.env.PORT || 9999;
 
-// 創建一個寫入流，將日誌寫入 'access.log' 文件
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
-
 // 自定義 morgan 日誌格式
 morgan.token('time', function (req) {
-    return new Date().toISOString();  // 請求的時間戳
+    return new Date().toISOString(); // 請求的時間戳
 });
 
 morgan.token('query', function (req) {
-    return JSON.stringify(req.query);  // 查詢參數
+    return JSON.stringify(req.query); // 查詢參數
 });
 
 morgan.token('body', function (req) {
-    return JSON.stringify(req.body);  // 請求體
+    // 直接記錄請求的原始資料（這裡假設是文本或 JSON）
+    return req.body || ''; // 若有請求體，記錄它
 });
 
-// 使用自定義格式記錄日誌
-app.use(morgan(':time :method :url :query :body', { stream: accessLogStream }));
-
+// 使用自定義格式記錄日誌，並將其輸出到 stdout
+app.use(morgan(':time :method :url :query :body', {
+    stream: process.stdout // 將 morgan 的日誌輸出到標準輸出（stdout）
+}));
 
 app.get('/', (req, res) => {
     res.send('Hello, World!~~~~~~~~~~~~~');
