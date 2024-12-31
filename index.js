@@ -5,6 +5,8 @@ const path = require('path');
 
 const app = express();
 app.use(express.json());
+app.use(express.text());
+app.use(express.raw());
 const port = process.env.PORT || 9999;
 
 // 創建一個寫入流，將日誌寫入 'access.log' 文件
