@@ -2,7 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 
 const app = express();
-app.use(express.json());
+// app.use(express.json());
 app.use(express.text());
 app.use(express.raw());
 const port = process.env.PORT || 9999;
